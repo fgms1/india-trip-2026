@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#12306b">
+<meta name="description" content="印度之旅手机公网行动手册 · 2026国庆 14天 孟买→德里">
+<title>🛕 印度之旅 · 行动手册</title>
+<style>
+  /* ============ 基础变量 · 印度风配色 ============ */
+  :root{
+    --saffron: #FF9933;        /* 藏红花橙 */
+    --saffron-dark: #E87A00;
+    --saffron-soft: #FFE7CC;
+    --indigo: #12306b;         /* 靛蓝 */
+    --indigo-light: #1e4785;
+    --green: #138808;          /* 印度国旗绿（点缀） */
+    --cream: #FBF6EC;          /* 暖米底 */
+    --cream-2: #F4ECDA;
+    --card: #ffffff;
+    --text: #2b2b2b;
+    --muted: #7a7465;
+    --line: #E8DFCC;
+    --shadow: 0 2px 10px rgba(18,48,107,.08);
+    --radius: 14px;
+    --tabbar-h: 60px;
+    --header-h: 0;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ -webkit-text-size-adjust:100%; }
+
+  body{
+    font-family:'PingFang SC', -apple-system, 'Microsoft YaHei', sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    line-height:1.55;
+    font-size:16px;
+    padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 16px);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ============ 头部 ============ */
+  .header{
+    background:linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 45%, var(--saffron-dark) 130%);
+    color:#fff;
+    padding:18px 16px 14px;
+    padding-top: calc(18px + env(safe-area-inset-top));
+  }
+  .header-title{
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:.5px;
+  }
+  .header-sub{
+    font-size:12.5px;
+    margin-top:4px;
+    opacity:.9;
+  }
+  .tricolor{
+    height:4px;
+    margin-top:12px;
+    border-radius:2px;
+    background:linear-gradient(90deg, var(--saffron) 0 33.3%, #fff 33.3% 66.6%, var(--green) 66.6% 100%);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);
+  }
+
+  /* ============ 顶部 Tabs（城市 + 日期） ============ */
+  .tabs-wrap{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--cream);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 4px 8px rgba(18,48,107,.04);
+    padding-bottom:8px;
+  }
+  .tab-scroll{
+    display:flex;
+    overflow-x:auto;
+    gap:8px;
+    padding:10px 12px 0;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .tab-scroll::-webkit-scrollbar{ display:none; }
+
+  .pill{
+    flex:0 0 auto;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--muted);
+    font-size:14px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .18s ease;
+    font-family:inherit;
+  }
+  .pill:active{ transform:scale(.96); }
+  .pill.active{
+    background:var(--saffron);
+    border-color:var(--saffron);
+    color:#fff;
+    box-shadow:0 3px 8px rgba(255,153,51,.4);
+  }
+  .pill .en{ font-size:10.5px; opacity:.75; font-weight:400; }
+  .pill.active .en{ opacity:.9; }
+
+  .date-pills{
+    display:flex;
+    overflow-x:auto;
+    gap:8px;
+    padding:8px 12px 0;
+    border-top:1px dashed var(--line);
+    margin-top:6px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .date-pills::-webkit-scrollbar{ display:none; }
+  .date-pills:empty{ display:none; border-top:none; margin-top:0; padding:0; }
+  .date-pill{
+    flex:0 0 auto;
+    background:var(--cream-2);
+    color:var(--indigo);
+    border:1px solid var(--line);
+    font-size:13px;
+    font-weight:600;
+    padding:6px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:all .18s ease;
+  }
+  .date-pill.active{
+    background:var(--indigo);
+    border-color:var(--indigo);
+    color:#fff;
+  }
+
+  /* ============ 内容区 ============ */
+  #content{ max-width:640px; margin:0 auto; padding:14px 12px 0; }
+  section{ scroll-margin-top:84px; }
+
+  .section-title{
+    font-size:16px;
+    font-weight:700;
+    color:var(--indigo);
+    margin:18px 2px 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title::after{
+    content:"";
+    flex:1;
+    height:2px;
+    background:linear-gradient(90deg, var(--saffron), transparent);
+    opacity:.5;
+  }
+  section:first-child .section-title{ margin-top:6px; }
+
+  /* ============ 当日行程 · 时间轴 ============ */
+  .itinerary-meta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:linear-gradient(120deg, var(--saffron-soft), #fff);
+    border:1px solid #FFD9A6;
+    border-radius:12px;
+    padding:10px 14px;
+    margin-bottom:14px;
+    font-size:14px;
+  }
+  .itinerary-meta .daytag{
+    background:var(--saffron);
+    color:#fff;
+    font-weight:700;
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:6px;
+  }
+  .itinerary-meta .city{ font-weight:700; color:var(--indigo); }
+
+  .timeline{ position:relative; padding-left:26px; }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:8px; top:6px; bottom:6px;
+    width:2px;
+    background:linear-gradient(180deg, var(--saffron), var(--indigo));
+    border-radius:1px;
+  }
+  .tl-item{
+    position:relative;
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:12px 14px;
+    margin-bottom:12px;
+    border-left:3px solid var(--saffron);
+  }
+  .tl-item::before{
+    content:"";
+    position:absolute;
+    left:-24px; top:18px;
+    width:10px; height:10px;
+    border-radius:50%;
+    background:var(--saffron);
+    border:2px solid #fff;
+    box-shadow:0 0 0 2px var(--saffron);
+  }
+  .tl-head{ display:flex; align-items:baseline; gap:8px; }
+  .tl-time{
+    color:var(--saffron-dark);
+    font-weight:800;
+    font-size:14px;
+    font-variant-numeric:tabular-nums;
+  }
+  .tl-activity{ font-weight:600; font-size:15px; }
+  .tl-transport{
+    margin-top:6px;
+    font-size:12.5px;
+    color:var(--indigo-light);
+    background:var(--cream-2);
+    border-radius:8px;
+    padding:4px 8px;
+    display:inline-block;
+  }
+  .tl-empty{
+    text-align:center;
+    color:var(--muted);
+    padding:32px 10px;
+    font-size:14px;
+    background:var(--card);
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+  }
+
+  /* ============ 卡片（景点 / 酒店） ============ */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:14px;
+    margin-bottom:12px;
+  }
+  .card h3{
+    font-size:15.5px;
+    color:var(--indigo);
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .badge{
+    font-size:11px;
+    font-weight:700;
+    background:var(--saffron-soft);
+    color:var(--saffron-dark);
+    padding:2px 8px;
+    border-radius:6px;
+    flex:0 0 auto;
+  }
+  .kv{ display:flex; gap:8px; font-size:13.5px; margin-top:5px; }
+  .kv .k{
+    color:var(--muted);
+    flex:0 0 64px;
+    font-weight:600;
+  }
+  .kv .v{ flex:1; }
+  .kv .v a{ color:var(--indigo-light); text-decoration:none; }
+  .food-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .food-chip{
+    font-size:12px;
+    background:var(--green);
+    color:#fff;
+    padding:3px 9px;
+    border-radius:999px;
+  }
+
+  /* ============ 注意事项 ============ */
+  .note-item{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:12px 14px;
+    margin-bottom:10px;
+    border-left:3px solid var(--indigo);
+  }
+  .note-cat{
+    font-weight:700;
+    color:var(--saffron-dark);
+    font-size:12.5px;
+    letter-spacing:.5px;
+    margin-bottom:3px;
+  }
+  .note-text{ font-size:14px; }
+
+  /* ============ 底部固定 Tab 栏 ============ */
+  .bottom-bar{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    z-index:100;
+    height:calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+    padding-bottom:env(safe-area-inset-bottom);
+    background:#fff;
+    border-top:1px solid var(--line);
+    box-shadow:0 -4px 14px rgba(18,48,107,.12);
+    display:flex;
+    max-width:640px;
+    margin:0 auto;
+  }
+  .bottom-tab{
+    flex:1;
+    border:none;
+    background:none;
+    font-family:inherit;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    color:var(--muted);
+    transition:color .18s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .bottom-tab .bt-icon{ font-size:20px; line-height:1; }
+  .bottom-tab .bt-label{ font-size:11.5px; font-weight:600; }
+  .bottom-tab.active{ color:var(--saffron-dark); }
+  .bottom-tab.active .bt-icon{ transform:translateY(-1px); }
+  .bottom-tab.active::before{
+    content:"";
+    position:absolute;
+    top:0; left:25%; right:25%;
+    height:3px;
+    background:var(--saffron);
+    border-radius:0 0 3px 3px;
+  }
+  .bottom-tab{ position:relative; }
+
+  /* ============ 桌面宽屏留白 ============ */
+  @media (min-width: 700px){
+    body{ background:var(--cream-2); }
+    /* 顶部与底部栏在宽屏下也居中限宽 */
+    .tabs-wrap{ background:var(--cream); }
+    .header{ padding-left:24px; padding-right:24px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- 头部 -->
+  <header class="header">
+    <div class="header-title">🇮🇳 🛕 印度之旅 · 行动手册</div>
+    <div class="header-sub">2026.9.25—10.8 · 3人 · 14天 · 孟买→德里 · 点击城市/日期切换</div>
+    <div class="tricolor"></div>
+  </header>
+
+  <!-- 顶部：城市 + 日期 Tabs -->
+  <nav class="tabs-wrap">
+    <div id="cityTabs" class="tab-scroll"></div>
+    <div id="dateTabs" class="date-pills"></div>
+  </nav>
+
+  <!-- 主内容区 -->
+  <main id="content">
+
+    <!-- ① 当日行程（由顶部 城市/日期 Tab 驱动） -->
+    <section id="section-itinerary">
+      <h2 class="section-title">📅 当日行程</h2>
+      <div id="itineraryMeta" class="itinerary-meta"></div>
+      <div id="itinerary" class="timeline"></div>
+    </section>
+
+    <!-- ② 行程交通（全局） -->
+    <section id="section-transport">
+      <h2 class="section-title">🚇 行程交通 · 景点介绍</h2>
+      <div id="attractions"></div>
+    </section>
+
+    <!-- ③ 酒店美食（全局） -->
+    <section id="section-hotel">
+      <h2 class="section-title">🏨 酒店美食</h2>
+      <div id="hotels"></div>
+    </section>
+
+    <!-- ④ 注意事项（全局） -->
+    <section id="section-notes">
+      <h2 class="section-title">⚠️ 注意事项</h2>
+      <div id="notes"></div>
+    </section>
+
+  </main>
+
+  <!-- 底部固定三大块 Tab 栏 -->
+  <nav id="bottomBar" class="bottom-bar">
+    <button class="bottom-tab" data-target="section-transport">
+      <span class="bt-icon">🚇</span><span class="bt-label">行程交通</span>
+    </button>
+    <button class="bottom-tab" data-target="section-hotel">
+      <span class="bt-icon">🏨</span><span class="bt-label">酒店美食</span>
+    </button>
+    <button class="bottom-tab" data-target="section-notes">
+      <span class="bt-icon">⚠️</span><span class="bt-label">注意事项</span>
+    </button>
+  </nav>
+
+<script>
+/* =====================================================================
+ * 数据占位结构（后续由其他 agent 填充完整数据）
+ * 注意：所有字段已预留，此处仅留 1-2 条示例
+ * ===================================================================== */
+const DATA = {
+  cities: [{"id": "mumbai", "name": "孟买", "en": "Mumbai", "dates": ["9.25", "9.26", "9.27"]}, {"id": "amritsar", "name": "阿姆利则", "en": "Amritsar", "dates": ["9.28"]}, {"id": "varanasi", "name": "瓦拉纳西", "en": "Varanasi", "dates": ["9.29", "9.30"]}, {"id": "agra", "name": "阿格拉", "en": "Agra", "dates": ["10.1", "10.2", "10.3"]}, {"id": "jaipur", "name": "斋浦尔", "en": "Jaipur", "dates": ["10.4"]}, {"id": "delhi", "name": "德里", "en": "Delhi", "dates": ["10.5", "10.6", "10.7", "10.8"]}],
+  itinerary: {"mumbai|9.25": {"dayLabel": "9.25", "note": "抵达孟买", "items": [{"time": "14:30", "activity": "天河家中出发", "transport": "🚗打车(40min)"}, {"time": "15:10", "activity": "抵广州南站", "transport": "—"}, {"time": "15:30", "activity": "乘高铁→香港西九龙", "transport": "🚄高铁(60min)"}, {"time": "16:30", "activity": "抵西九龙", "transport": "—"}, {"time": "16:35", "activity": "转机场快线(九龙站)", "transport": "🚆机场快线(30min)"}, {"time": "17:05", "activity": "抵香港国际机场", "transport": "—"}, {"time": "17:10-20:20", "activity": "值机安检候机", "transport": "国泰CX663"}, {"time": "20:35", "activity": "✈️香港→孟买 CX663", "transport": "国泰航空"}, {"time": "次日00:20", "activity": "抵孟买机场", "transport": "—"}]}, "mumbai|9.26": {"dayLabel": "9.26", "note": "达拉维+市区", "items": [{"time": "00:20-01:00", "activity": "入境取行李换卢比", "transport": "—"}, {"time": "01:20-09:00", "activity": "入住Indie Stays 补觉", "transport": "🚗机场接送"}, {"time": "09:30-10:30", "activity": "前往 Churchgate/科拉巴区", "transport": "🚗 打车"}, {"time": "11:00", "activity": "前往 Burger King（Churchgate车站旁）集合", "transport": "🚗 打车"}, {"time": "11:15-15:00", "activity": "📌 Dharavi 贫民窟 + 千人洗衣场 联动导览团（含洗衣场）", "transport": "徒步·跟团"}, {"time": "15:15-16:00", "activity": "午餐（Churchgate/海滨区）", "transport": "餐厅"}, {"time": "16:15-17:30", "activity": "📍 泰姬玛哈酒店外观 + 海滨大道漫步", "transport": "步行"}, {"time": "17:30-18:30", "activity": "📍 维多利亚终点站 CST（世遗）", "transport": "🚕 打车"}, {"time": "18:45-19:45", "activity": "📍 马拉巴尔山观景台看日落", "transport": "🚕 打车"}, {"time": "19:45-21:00", "activity": "晚餐", "transport": "餐厅"}, {"time": "21:30", "activity": "返回酒店", "transport": "🚗 打车"}]}, "mumbai|9.27": {"dayLabel": "9.27", "note": "象岛+飞阿姆利则", "items": [{"time": "08:00-08:30", "activity": "早餐、退房存行李", "transport": "🏨 酒店"}, {"time": "08:30-09:00", "activity": "前往阿波罗码头（赶09:00首班船）", "transport": "🚕 打车"}, {"time": "09:00-10:00", "activity": "🚢 乘船前往象岛（09:00首班，约60min）", "transport": "🚢 渡轮"}, {"time": "10:00-12:30", "activity": "探访象岛石窟 Elephanta Caves（世遗，2.5h）", "transport": "徒步"}, {"time": "12:30-13:30", "activity": "🚢 乘船返回市区（约60min）", "transport": "🚢 渡轮"}, {"time": "13:30-14:15", "activity": "📍 印度门 Gateway of India（码头旁打卡）+ 码头午餐", "transport": "步行/街边"}, {"time": "14:30-14:45", "activity": "返回酒店取行李", "transport": "🚕 打车"}, {"time": "15:00-19:00", "activity": "前往机场、值机候机（提前3h+）", "transport": "✈️ 6E5028"}, {"time": "19:35", "activity": "✈️孟买→阿姆利则 6E5028", "transport": "靛蓝"}, {"time": "22:00", "activity": "抵阿姆利则，入住地标酒店(金庙旁)", "transport": "🚗机场→酒店"}]}, "amritsar|9.28": {"dayLabel": "9.28", "note": "金庙+瓦嘎", "items": [{"time": "05:00-06:30", "activity": "金庙晨祷 Harmandir Sahib", "transport": "步行"}, {"time": "06:45-07:30", "activity": "金庙免费食堂 Langar 早餐", "transport": "金庙内"}, {"time": "08:00-10:30", "activity": "金庙深度+锡克教博物馆", "transport": "步行"}, {"time": "10:45-11:30", "activity": "返酒店休整", "transport": "步行"}, {"time": "12:00-13:30", "activity": "午餐", "transport": "餐厅"}, {"time": "15:20-16:00", "activity": "前往瓦嘎边境", "transport": "🚗包车(40min)"}, {"time": "16:00-17:30", "activity": "安检入场、占位", "transport": "—"}, {"time": "17:30-18:15", "activity": "印巴边境降旗仪式 Wagah", "transport": "观礼"}, {"time": "18:30-19:10", "activity": "返回市区", "transport": "🚗包车"}, {"time": "19:30-20:30", "activity": "晚餐", "transport": "餐厅"}, {"time": "21:00-21:35", "activity": "🌙 金庙夜景 + 夜祭开场打卡（Sukhasan Aarti，约10min）", "transport": "步行"}, {"time": "21:40-22:00", "activity": "前往机场（金庙→机场13km，约20min）", "transport": "🚗 打车"}, {"time": "23:10", "activity": "✈️阿姆利则→德里 6E5304(红眼)", "transport": "靛蓝"}, {"time": "次日00:25", "activity": "抵德里T3，入住Urban Lion", "transport": "🚗机场接送"}]}, "varanasi|9.29": {"dayLabel": "9.29", "note": "飞瓦拉纳西+夜祭", "items": [{"time": "08:00-08:40", "activity": "Urban Lion早餐退房", "transport": "—"}, {"time": "08:40-09:00", "activity": "前往机场T3", "transport": "🚗酒店→机场"}, {"time": "09:00-10:00", "activity": "值机候机（同一T3，红眼无需换航站楼）", "transport": "✈️"}, {"time": "10:25", "activity": "✈️德里→瓦拉纳西 6E5025", "transport": "靛蓝"}, {"time": "11:50", "activity": "抵瓦拉纳西", "transport": "—"}, {"time": "11:50-12:20", "activity": "前往Bedzzz入住（VNS机场→老城19km·约28min）", "transport": "🚕 打车"}, {"time": "13:00-14:00", "activity": "午餐休整", "transport": "—"}, {"time": "14:30-16:30", "activity": "老城漫步+贝拿勒斯大学", "transport": "🚕打车+步行"}, {"time": "17:00", "activity": "前往Dashashwamedh河坛占位", "transport": "步行"}, {"time": "17:30-19:30", "activity": "等候恒河夜祭", "transport": "河坛"}, {"time": "19:30-20:30", "activity": "恒河夜祭 Ganga Aarti🌅", "transport": "观礼"}, {"time": "20:45", "activity": "返回酒店、晚餐", "transport": "步行"}]}, "varanasi|9.30": {"dayLabel": "9.30", "note": "恒河日出+鹿野苑", "items": [{"time": "05:00", "activity": "起床前往码头", "transport": "步行"}, {"time": "05:30-07:00", "activity": "恒河日出游船+晨浴🌄", "transport": "🚣游船"}, {"time": "07:15-08:00", "activity": "返回酒店早餐", "transport": "步行"}, {"time": "08:30-09:00", "activity": "前往鹿野苑", "transport": "🚗打车(30min)"}, {"time": "09:00-11:30", "activity": "鹿野苑遗址+佛博物馆+佛塔", "transport": "园区步行"}, {"time": "11:45-12:30", "activity": "返回市区", "transport": "🚗打车"}, {"time": "12:45-14:00", "activity": "午餐", "transport": "餐厅"}, {"time": "14:30-17:30", "activity": "探访喀什毗湿瓦纳神庙（瓦拉纳西金庙·湿婆圣殿，含排队约1.5h）→ 顺路老城寺庙群 + 市集逛吃", "transport": "步行（老城内）"}, {"time": "18:00-19:30", "activity": "晚餐、收拾行李、退房", "transport": "—"}, {"time": "20:00-20:30", "activity": "前往BSB火车站（老城→BSB约6km·25-30min，夜车提前到）", "transport": "🚕 打车"}, {"time": "22:30", "activity": "🚂瓦拉纳西BSB→滕德拉 22581(AC2A卧铺)", "transport": "火车(7h53m)"}]}, "agra|10.1": {"dayLabel": "10.1", "note": "泰姬陵日", "items": [{"time": "06:23", "activity": "抵滕德拉 TDL站（25km站，往南约50min到泰姬陵）", "transport": "🚂 22581"}, {"time": "06:50-07:45", "activity": "抵 The Vacation Villa，寄存行李（滕德拉→酒店约45-60min车程）", "transport": "🚕 打车"}, {"time": "07:45-08:45", "activity": "早餐 + 咖啡（悠闲，酒店/周边）", "transport": "—"}, {"time": "09:00-11:15", "activity": "🏰 阿格拉堡 Agra Fort（世遗，打车10min·上午凉爽全览镜宫/公众大厅）", "transport": "🚕 打车"}, {"time": "11:30-12:45", "activity": "午餐（阿格拉堡周边/市区）", "transport": "餐厅"}, {"time": "13:00-13:30", "activity": "回酒店办入住、放行李（13:00后可入住）", "transport": "🚕 打车"}, {"time": "13:30-14:30", "activity": "🏛️ 小泰姬陵 Itimad-ud-Daulah（河西岸，阿格拉堡旁3km·顺路）", "transport": "🚕 打车"}, {"time": "14:45-16:15", "activity": "🛍️ Sadar Bazar 市集采购（河西岸城区，顺路）", "transport": "步行"}, {"time": "16:30-17:00", "activity": "前往月光花园（酒店→月光花园约6km·15-20min）", "transport": "🚕 打车"}, {"time": "17:20-18:40", "activity": "🌇 月光花园看泰姬陵日落（正对泰姬陵经典视角）", "transport": "河边步行"}, {"time": "19:00-20:00", "activity": "晚餐（泰姬陵周边，步行回酒店）", "transport": "餐厅"}, {"time": "20:20", "activity": "返回酒店", "transport": "🚗 打车"}]}, "agra|10.2": {"dayLabel": "10.2", "note": "法塔赫+小泰姬陵", "items": [{"time": "08:00-08:40", "activity": "早餐、带好随身物品（10.2仍住本酒店，不退房）", "transport": "—"}, {"time": "09:00-10:00", "activity": "前往法塔赫布尔西格里", "transport": "🚗包车(40km)"}, {"time": "10:00-12:30", "activity": "遗址游览（请ASI官方导游：现场导游柜台雇，₹450/2h，讲解布兰德门/五层宫等）", "transport": "园区步行"}, {"time": "12:45-13:45", "activity": "遗址周边午餐", "transport": "—"}, {"time": "14:15-15:15", "activity": "返回市区", "transport": "🚗包车"}, {"time": "15:30-17:00", "activity": "自由休整/补个觉（前几天熬红眼，休息一下）", "transport": "休息"}, {"time": "18:00-19:00", "activity": "泰姬陵外围夜景", "transport": "🚕打车"}, {"time": "19:15-20:15", "activity": "晚餐", "transport": "餐厅"}, {"time": "20:30", "activity": "返回酒店", "transport": "🚗打车"}]}, "agra|10.3": {"dayLabel": "10.3", "note": "泰姬陵日出+转斋浦尔", "items": [{"time": "05:10-05:20", "activity": "起床、洗漱、简单早餐（5:50要到泰姬陵东门）", "transport": "—"}, {"time": "05:20-05:50", "activity": "步行前往泰姬陵东门（酒店步行5-8min，5:50前到门口排队）", "transport": "步行"}, {"time": "05:50-09:00", "activity": "5:50到东门排队，6:00开门进场🌅泰姬陵日出自走（东门·提前电子票·主拱框景/水池倒影/陵光）", "transport": "园区步行"}, {"time": "09:15", "activity": "取行李出发→斋浦尔", "transport": "🚗包车"}, {"time": "09:30-13:00", "activity": "车程：阿格拉→斋浦尔（约240km·3-3.5h，高速）", "transport": "🚗 包车"}, {"time": "13:00-14:00", "activity": "午餐（斋浦尔市区）", "transport": "餐厅"}, {"time": "14:15-14:45", "activity": "入住 Cygnett Park BL", "transport": "酒店"}, {"time": "15:00-16:00", "activity": "🏯 城市宫殿 City Palace（老城平地，16:30前要到）", "transport": "🚕 打车/步行"}, {"time": "16:15-17:00", "activity": "☀️ 简塔曼塔天文台 Jantar Mantar（城市宫殿隔壁，45min）", "transport": "步行"}, {"time": "17:15-18:15", "activity": "🌇 风之宫殿外观日落街拍 Hawa Mahal（老城）", "transport": "步行"}, {"time": "18:30-20:00", "activity": "🛍️ 老城夜市 Johari/Bapu Bazaar 闲逛 + 晚餐", "transport": "步行"}, {"time": "20:15", "activity": "返回 Cygnett Park BL 酒店", "transport": "🚕 打车"}]}, "jaipur|10.4": {"dayLabel": "10.4", "note": "琥珀堡+水宫", "items": [{"time": "08:00-08:40", "activity": "早餐（斋浦尔同住 Cygnett Park BL，不退房）", "transport": "—"}, {"time": "09:00-09:20", "activity": "前往琥珀堡，途中顺路停【水宫 Jal Mahal】湖畔拍照（约10min）", "transport": "🚕 打车(11km)"}, {"time": "09:30-11:30", "activity": "🏰 琥珀堡 Amber Fort（吉普车上山·请讲解·镜宫/山上堡垒）", "transport": "山上步行"}, {"time": "11:30-11:50", "activity": "🪜 阶梯水井 Panna Meenaka Kund（琥珀堡旁顺路，参考亮点）", "transport": "步行"}, {"time": "12:00-13:00", "activity": "山下午餐", "transport": "餐厅"}, {"time": "13:30-15:00", "activity": "🆓 自由休整（老城点已挪10.3，回酒店歇脚纳凉）", "transport": "休息"}, {"time": "15:15-16:00", "activity": "🆓 可选：斋加尔堡/市区简逛，或继续休整", "transport": "—"}, {"time": "16:15-17:15", "activity": "🧖 阿育吠陀 Ubtan 面部护理（宫廷SPA，下午时段稳妥营业）", "transport": "🚕 打车/酒店安排"}, {"time": "17:30-18:00", "activity": "休整/回老城简逛（可选）", "transport": "—"}, {"time": "19:15-20:30", "activity": "晚餐（地道拉贾斯坦料理）", "transport": "餐厅"}, {"time": "20:45", "activity": "返回 Cygnett Park BL 酒店、休息", "transport": "🚕 打车"}]}, "delhi|10.5": {"dayLabel": "10.5", "note": "高铁+德里", "items": [{"time": "08:00-08:40", "activity": "早餐、退房（26481高铁09:23发）", "transport": "—"}, {"time": "08:40-09:10", "activity": "前往斋浦尔火车站（提前30min安检）", "transport": "🚕 打车"}, {"time": "09:23", "activity": "🚄 斋浦尔→德里 Vande Bharat 26481（09:23发·13:30抵Delhi Cantt；Delhi Cantt→Anu Plaza约20-30min）", "transport": "高铁"}, {"time": "13:30", "activity": "抵德里 Delhi Cantt", "transport": "—"}, {"time": "14:00-15:00", "activity": "入住 Anu Plaza（打车30min）+ 简餐", "transport": "🚕 打车"}, {"time": "15:00-15:20", "activity": "前往胡马雍陵", "transport": "🚕 打车"}, {"time": "15:30-17:10", "activity": "🕌 胡马雍陵（世遗，泰姬陵原型·日落金色倒影）", "transport": "园区步行"}, {"time": "17:15-17:50", "activity": "🕍 尼扎穆丁苏菲圣陵 Nizamuddin Dargah（胡马雍陵步行10min顺路）", "transport": "步行"}, {"time": "18:00-18:30", "activity": "🚕 前往 Indian Accent（The Lodhi 酒店）", "transport": "打车"}, {"time": "18:30-19:00", "activity": "抵 The Lodhi（提前到·休整）", "transport": "—"}, {"time": "19:00-21:00", "activity": "🍽️ Indian Accent 晚餐（🏆亚洲50佳#26·印度最佳餐厅·创新印度料理，19点已订）", "transport": "餐厅"}, {"time": "21:15", "activity": "返回酒店", "transport": "🚗打车"}]}, "delhi|10.6": {"dayLabel": "10.6", "note": "德里老城", "items": [{"time": "08:30-09:00", "activity": "早餐", "transport": "—"}, {"time": "09:00-09:30", "activity": "🚇【地铁】→国家博物馆：Anu Plaza→Central Sec/Udyog Bhawan站(黄线)；或【打车】35min", "transport": "地铁/打车"}, {"time": "09:30-12:00", "activity": "🏛️ 国家博物馆 National Museum（印度最大·5000年文明）", "transport": "馆内步行"}, {"time": "12:15-13:15", "activity": "午餐", "transport": "餐厅"}, {"time": "13:30-14:10", "activity": "🚇【地铁】→红堡：Central Sec→Lal Qila站(紫线换乘，出站即达红堡)；或【打车】", "transport": "地铁/打车"}, {"time": "14:10-16:00", "activity": "🏯 红堡 Red Fort（世遗，地铁Chandni Chowk站+突突约1km）", "transport": "步行/突突"}, {"time": "16:10-16:50", "activity": "🛺突突→贾玛清真寺（约1.5km）", "transport": "突突车"}, {"time": "16:50-17:40", "activity": "🕌 贾玛清真寺（门票需披袍/摄影费注意）", "transport": "寺内步行"}, {"time": "17:40-18:10", "activity": "🛍️ 月光集市+香料市场 Khari Baoli（老德里逛吃，Paranthe烤饼·快速30min）", "transport": "步行"}, {"time": "18:20-19:30", "activity": "🍢 Karim's 晚餐（1913年百年老店·Mughlai宫廷烤肉，贾玛清真寺旁顺路）", "transport": "餐厅"}, {"time": "19:30-19:40", "activity": "🚇【地铁】→印度门：Karim's→Central Sec站(黄线)；或【打车】", "transport": "地铁/打车"}, {"time": "19:40-20:20", "activity": "🇮🇳 印度门 India Gate（国王大道夜景遛弯）", "transport": "步行"}, {"time": "20:40", "activity": "返回酒店", "transport": "🚕 打车"}]}, "delhi|10.7": {"dayLabel": "10.7", "note": "顾特卜塔+莲花寺", "items": [{"time": "08:00-08:30", "activity": "早餐、退房、寄存行李", "transport": "—"}, {"time": "08:40-09:50", "activity": "🚇【地铁】→顾特卜塔：Rajiv Chowk→Qutab Minar站(黄线直达40min)；或【打车】。🗼顾特卜塔游览（世遗）", "transport": "地铁/打车"}, {"time": "10:00-10:50", "activity": "🚇【地铁】→莲花寺：Qutab Minar→Kalkaji Mandir站(换紫线)；或【打车】。🕍莲花寺游览（免费白莲瓣）", "transport": "地铁/打车"}, {"time": "11:00-12:00", "activity": "🛍️ 康诺特广场（地铁Rajiv Chowk站；或打车），逛街+伴手礼采购", "transport": "地铁/打车"}, {"time": "12:00-13:00", "activity": "午餐（康诺特周边）", "transport": "餐厅"}, {"time": "13:30-15:00", "activity": "🚕 回酒店取行李、休整", "transport": "打车"}, {"time": "16:00", "activity": "🚕 从酒店出发→机场T3（最迟，20:00起飞预留3h）", "transport": "打车"}, {"time": "16:40-19:30", "activity": "值机安检候机（提前3h+，20:00航班）", "transport": "靛蓝6E1701"}, {"time": "20:00", "activity": "✈️德里→广州 6E1701⚠️(有调整/提前)", "transport": "靛蓝"}, {"time": "次日04:00", "activity": "抵广州白云T2", "transport": "—"}]}, "delhi|10.8": {"dayLabel": "10.8", "note": "返程抵广州", "items": [{"time": "04:00", "activity": "抵广州白云T2、取行李", "transport": "—"}, {"time": "04:30", "activity": "返家", "transport": "🚗打车"}, {"time": "~05:30", "activity": "到家，行程结束🏠", "transport": "—"}]}},
+  attractions: [{"name": "达拉维贫民窟 Dharavi", "city": "孟买", "ticket": "正规导览团约₹1450-7500", "hours": "白天约9:00-17:00发团", "transport": "孟买中部；建议参加责任导览团", "intro": "占地2.1km²常住60-100万人的\"城中之城\"，皮革/陶器/回收/薄饼作坊经济，《贫民窟的百万富翁》取景地。⚠️严禁拍照、勿独自深入。"}, {"name": "象岛石窟 Elephanta Caves", "city": "孟买", "ticket": "外国₹600", "hours": "周二至周日9:30-17:30，周一闭", "transport": "印度门乘渡轮约1小时", "intro": "UNESCO世遗，5-8世纪湿婆主题石窟，核心1号窟三面湿婆巨像Trimurti高6米。周一闭；渡轮防晒。"}, {"name": "希瓦吉终点站 CST", "city": "孟买", "ticket": "免费", "hours": "24小时", "transport": "Fort区，Mumbai Local直达", "intro": "UNESCO世遗，1887年维多利亚哥特+印度宫殿融合，孟买哥特式象征。人流拥挤防窃，傍晚拍夜景。"}, {"name": "泰姬玛哈酒店外观 Taj Mahal Palace", "city": "孟买", "ticket": "外观免费", "hours": "外观24h；内部需消费/预订", "transport": "印度门正对面，Colaba", "intro": "1903年开业印度最老五星，印度-撒拉逊风格，2008恐袭后重建。入内须安检，预订下午茶Sea Lounge。电话+912266653366。"}, {"name": "马拉巴尔山 Malabar Hill", "city": "孟买", "ticket": "免费", "hours": "白天至傍晚", "transport": "South Mumbai滨海", "intro": "孟买最贵住宅区，空中花园赏日落海景+女王项链Marine Drive，班甘加水池。防晒，入庙脱鞋。"}, {"name": "金庙 Golden Temple", "city": "阿姆利则", "ticket": "免费（含Langar圣餐）", "hours": "24小时全年无休", "transport": "阿姆利则老城", "intro": "锡克教最神圣圣地，镀金殿堂浮圣池中央，免费Langar。⚠️必须赤脚+包头（免费头巾）、遮肩、勿携皮革。"}, {"name": "瓦嘎边境降旗 Wagah Border", "city": "阿姆利则", "ticket": "免费（外国人有VIP区凭护照）", "hours": "每日日落前，10月约16:15-16:30", "transport": "阿姆利则西30km，包车往返约₹1200-1500", "intro": "印巴唯一陆路口岸每晚降旗，高抬腿正步+对峙+呐喊，嘉年华氛围。⚠️必须带护照！边境信号屏蔽提前约司机，提前1-2h到场。他们9.28去，注意10月时刻。"}, {"name": "锡克教中央博物馆", "city": "阿姆利则", "ticket": "免费", "hours": "约7:00-19:00", "transport": "金庙建筑群内", "intro": "锡克教历史与殉道者，油画/古币/武器/手稿。⚠️馆内严禁拍照，先守金庙赤脚包头规定。"}, {"name": "恒河夜祭 Ganga Aarti", "city": "瓦拉纳西", "ticket": "免费", "hours": "每晚日落约18:00-18:30", "transport": "Dashashwamedh Ghat，紧邻金庙", "intro": "瓦拉纳西最具震撼宗教盛景，7祭司持灯台/熏炉/孔雀羽扇向恒河献祭365天不断。提前40min占位，防VIP黄牛，可乘船观。"}, {"name": "恒河日出游船", "city": "瓦拉纳西", "ticket": "私人船约₹400-1600/h", "hours": "日出前约5:30-7:00", "transport": "从河坛登船", "intro": "88座河坛全景，晨雾圣浴/晨祷/洗涤纱丽。⚠️出发前敲定总价防加价，火葬河坛禁拍照。"}, {"name": "鹿野苑 Sarnath", "city": "瓦拉纳西", "ticket": "遗址外国约₹300，博物馆约₹100", "hours": "遗址6:00-18:00；博物馆9:00-17:00周五闭", "transport": "瓦拉纳西东北10-13km，打车25-45min", "intro": "佛教四大圣地，佛陀初转法轮地，答枚克佛塔43m，阿育王四狮柱头（国徽原型）。博物馆周五闭，进佛殿脱鞋。"}, {"name": "喀什毗湿瓦纳神庙", "city": "瓦拉纳西", "ticket": "免费；Sugam快速通道₹250", "hours": "darshan 4:00-11:00/12:20-19:00/20:30-21:00", "transport": "距夜祭河坛步行5min", "intro": "十二座Jyotirlinga之一宇宙之主Vishwanath，19世纪镀一吨黄金。⚠️手机/相机/包/皮带全寄存！只带护照现金，庙内禁拍照，脱鞋遮肩腿。"}, {"name": "泰姬陵 Taj Mahal", "city": "阿格拉", "ticket": "外国₹1100+₹200(进内室)；夜游₹750", "hours": "约6:00-18:30；⚡周五全天闭馆", "transport": "阿格拉Tajganj", "intro": "世界新七大奇迹，沙贾汗为亡妻穆塔兹玛哈尔建，17公顷白色大理石镶嵌半宝石。⚠️周五闭（他们10.1周四✅避开）；安检严三脚架大包禁带；建议在线购票。"}, {"name": "阿格拉堡 Agra Fort", "city": "阿格拉", "ticket": "外国₹650", "hours": "约6:00-18:00，每天开含周五", "transport": "距泰姬陵2.5km", "intro": "UNESCO世遗莫卧儿皇宫，红砂岩城墙2.5km，Musamman Burj八角塔沙贾汗软禁处远眺泰姬陵。仅Amar Singh Gate入场。"}, {"name": "小泰姬陵 Itimad-ud-Daulah", "city": "阿格拉", "ticket": "外国₹310", "hours": "约6:00-18:00", "transport": "亚穆纳河东岸距泰姬陵2.5km", "intro": "印度第一座全大理石建筑，泰姬陵蓝本，1622-28年努尔贾汉为父建。进主陵脱鞋，保留门票至离场（出口复查）。"}, {"name": "月光花园 Mehtab Bagh", "city": "阿格拉", "ticket": "外国₹300", "hours": "约6:00-18:00", "transport": "亚穆纳河北岸泰姬陵正对面，距阿格拉堡5.5km", "intro": "四等分式花园与泰姬陵中轴对齐，看泰姬陵日出/日落倒影最佳观景点。三脚架禁，周五泰姬陵闭馆时最佳替代。"}, {"name": "法塔赫布尔西格里 Fatehpur Sikri", "city": "阿格拉", "ticket": "外国约₹610", "hours": "约6:30-18:30", "transport": "阿格拉城西37km车程45-60min", "intro": "UNESCO世遗阿克巴都城，Buland Darwaza胜利之门，萨利姆奇什提陵。停车场距城门1.5km乘高尔夫球车₹25，建议官方导游₹450/2h防黄牛。"}, {"name": "琥珀堡 Amber Fort", "city": "斋浦尔", "ticket": "外国约₹500；组合票₹1000-1700", "hours": "约8:00-17:30", "transport": "斋浦尔市区北11km，吉普上山约₹450/5人", "intro": "UNESCO世遗1592年拉吉普特都城，镜宫Sheesh Mahal，印度教+伊斯兰融合。象骑已停不建议，台阶多带水，灯光秀需提前订。"}, {"name": "水宫 Jal Mahal", "city": "斋浦尔", "ticket": "免费", "hours": "全天远观", "transport": "Man Sagar湖，琥珀堡顺路", "intro": "1799年五层建筑四层沉水下，只能远观。不必专程，琥珀堡往返顺路停15min拍照。"}, {"name": "阶梯水井 Panna Meena", "city": "斋浦尔", "ticket": "免费", "hours": "约7:00-18:00", "transport": "琥珀堡脚下Amer村距1km", "intro": "16世纪对称几何阶梯水井，网红拍照点。下井台阶湿滑注意脚下。"}, {"name": "城市宫殿 City Palace", "city": "斋浦尔", "ticket": "外国约₹700（皇室私产）", "hours": "约9:30-17:00", "transport": "Tulsi Marg老城核心", "intro": "1729年建仍皇室居住，Mubarak Mahal+四彩绘门（孔雀门）网红，含最大银水壶。登顶Chandra另加价，勿闯皇室区域。"}, {"name": "简塔曼塔 Jantar Mantar", "city": "斋浦尔", "ticket": "外国约₹200", "hours": "约9:00-19:00", "transport": "Gangori Bazaar紧邻城市宫殿", "intro": "UNESCO世遗世界最大石制天文台，19件仪器，Samrat Yantra日晷高27m。建议请导游/语音导览否则看热闹。"}, {"name": "风之宫殿 Hawa Mahal", "city": "斋浦尔", "ticket": "外国约₹200", "hours": "约9:00-17:00", "transport": "Hawa Mahal Rd老城", "intro": "1799年953扇小窗薄立面，女眷观街市。最佳拍摄点在街对面屋顶咖啡馆。"}, {"name": "胡马雍陵 Humayun's Tomb", "city": "德里", "ticket": "外国₹550线上/₹600现场", "hours": "约6:00-18:00", "transport": "Mathura Road，opposite尼扎穆丁", "intro": "UNESCO世遗泰姬陵灵感来源，1565-72年花园式陵墓char-bagh。🔴线上订ASI票(asi.pay.gov.in)需护照，顺路尼扎穆丁。"}, {"name": "尼扎穆丁苏菲圣陵 Nizamuddin Dargah", "city": "德里", "ticket": "免费", "hours": "约5:00-22:00", "transport": "胡马雍陵对面步行5min", "intro": "14世纪活态圣地，卡瓦利qawwali仅周四晚18:30-20:00。必须脱鞋，女性带头巾，勿正面拍祷告者。（10.5不赶周四，qawwali看缘分）"}, {"name": "印度门 India Gate", "city": "德里", "ticket": "免费", "hours": "24小时", "transport": "Kartavya Path，Central Secretariat附近", "intro": "42m凯旋门纪念8.4万阵亡士兵1931，Amar Jawan Jyoti不灭之火。傍晚夜景最美。"}, {"name": "顾特卜塔 Qutub Minar", "city": "德里", "ticket": "外国₹550线上/₹600现场", "hours": "约7:00-17:00", "transport": "Mehrauli南区，地铁Qutub Minar站", "intro": "UNESCO世遗73m世界最高砖塔1192年，德里铁柱千余不锈。🔴线上订ASI票，塔不可攀爬。10.7清晨光最佳。"}, {"name": "莲花寺 Lotus Temple", "city": "德里", "ticket": "免费", "hours": "周二至周日9:00-17:00，⚡周一闭馆", "transport": "Kalkaji南区，地铁Kalkaji Mandir站", "intro": "巴哈伊27片白莲花花瓣，无偶像静思大厅。排队+安检，脱鞋，安静。10.7(周三)去✅可。"}, {"name": "康诺特广场 Connaught Place", "city": "德里", "ticket": "免费", "hours": "商铺约10:00-20:30", "transport": "地铁Rajiv Chowk站直达", "intro": "1933英殖民中央商务区白色乔治亚式环形，Janpath市场+Palika Bazaar淘货。防搭讪购物托。10.7采购+海纳手绘。"}, {"name": "国家博物馆 National Museum", "city": "德里", "ticket": "外国约₹650", "hours": "周二至周日10:00-18:00，周一闭", "transport": "Janpath Rd", "intro": "5000年文物20万件，舞女铜像/少年菩萨。⚠️正改造迁移Yuge Yugeen Bharat新馆，2026国庆开馆状态不稳，出发前务必确认。10.6周二去。"}, {"name": "红堡 Red Fort", "city": "德里", "ticket": "外国₹550线上/₹600现场", "hours": "约9:30-16:30，现7天无休", "transport": "Netaji Subhash Marg旧德里", "intro": "UNESCO世遗1639-48年沙贾汗皇宫，Diwan-i-Aam/Khas，独立日升旗。🔴线上订ASI票，灯光秀需提前订(BookMyShow)。10.6去。Lal Qila站步行可达。"}, {"name": "贾玛清真寺 Jama Masjid", "city": "德里", "ticket": "免费；相机费外国人约₹300", "hours": "游客7:00-12:00、13:30-18:30", "transport": "Chandni Chowk旧德里", "intro": "印度最大清真寺之一容2.5万人，1650-56年，宣礼塔40m可登顶。脱鞋遮肩盖膝女性遮发，相机费保留收据。10.6去。"}],
+  hotels: [{"name": "Indie Stays（孟买·多址需确认）", "city": "孟买", "address": "多分店（BKC/Chembur等），以预订单为准", "phone": "+91 98113 06760", "bookingCode": "1768588530", "nearbyFood": ["Pav Bhaji", "Vada Pav"]}, {"name": "地标酒店 Hotel Landmark（金庙旁）", "city": "阿姆利则", "address": "Ghee Mandi Chowk, Near Golden Temple, Amritsar", "phone": "+91 7210 000 703", "bookingCode": "待补充", "nearbyFood": ["Amritsari Kulcha", "Lassi"], "note": "步行5-10min即到金庙！距火车站1.9-2km"}, {"name": "Hotel Urban Lion（机场）", "city": "新德里", "address": "IGI Airport 附近", "phone": "—", "bookingCode": "1773830432", "nearbyFood": ["机场简餐"]}, {"name": "Bedzzz Varanasi", "city": "瓦拉纳西", "address": "Luxa Road, Near PDR Mall, Varanasi", "phone": "+91 95550 88000 / 0542 241 7071", "bookingCode": "待补充", "nearbyFood": ["Tamatar Chaat", "Banarasi Lassi"], "note": "距夜祭河坛步行15min，距金庙1km"}, {"name": "The Vacation Villa", "city": "阿格拉", "address": "Miyan Nazir Rd, Tajganj, Agra", "phone": "+91 70601 21359", "bookingCode": "1768594007", "nearbyFood": ["Petha", "屋顶咖啡"], "note": "距泰姬陵步行10min！距小泰姬陵2.7km、阿格拉堡3.4km"}, {"name": "Cygnett Park BL", "city": "斋浦尔", "address": "E-20, Nirman Nagar, Ajmer Road, Jaipur", "phone": "+91 85954 50450", "bookingCode": "待补充", "nearbyFood": ["Dal Baati Churma", "Ghevar"]}, {"name": "Hotel Anu Plaza", "city": "新德里", "address": "Plot-6 Block-7, Paharganj, DB Gupta Rd, Delhi", "phone": "待确认", "bookingCode": "1765194026", "nearbyFood": ["Chole Bhature"], "note": "紧邻新德里火车站"}],
+  notes: [{"category": "着装", "text": "宗教场所（清真寺/圣陵/莲花寺/金庙/神庙）一律脱鞋、遮肩盖腿、女性带围巾遮发；金庙必须包头；喀什金庙与圣陵电子设备/包全寄存。"}, {"category": "饮水饮食", "text": "只喝密封瓶装水，不吃路边切开水果/冰块，防\"德里腹泻\"；恒河船经火葬河坛严禁拍照。"}, {"category": "交通", "text": "Uber/Ola最省心，突突要先讲价；旧德里/瓦拉纳西巷子窄拥堵预留时间；德里地铁体验段：Rajiv Chowk/Qutub Minar/Lal Qila/Kalkaji Mandir站。"}, {"category": "购票", "text": "🔴ASI古迹(红堡/顾特卜塔/胡马雍陵/泰姬陵)线上订票asi.pay.gov.in需护照；斋浦尔obms-tourist.rajasthan.gov.in；灯光秀BookMyShow；相机费保留收据。"}, {"category": "安全财物", "text": "护照原件随身复印件常备；不轻信热心向导/黄牛；达拉维严禁拍照、勿独自深入；夜晚结伴；边境瓦嘎带护照。"}, {"category": "汇率", "text": "1元人民币≈11-12₹；机场换少量够用，市区汇率更好；景区分印度人/外国人价。"}, {"category": "签证/证件", "text": "印度电子签证出发前办好；机场/车/酒店备护照；泰姬陵等ASI购票需护照号。"}, {"category": "紧急电话", "text": "印度报警100、急救102；中国驻印使馆领保+91-11-26112345（待确认）。"}, {"category": "时间天气", "text": "印度时区=北京时间-2.5h；10月德里/斋浦尔25-35℃防晒补水；雨季已过但早晚偏凉带外套。"}],
+};
+
+
+/* =====================================================================
+ * 状态与渲染逻辑
+ * ===================================================================== */
+const state = {
+  cityId: null,
+  date: null,
+};
+
+const $ = (sel) => document.querySelector(sel);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
+  ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+
+/* ---- 城市 Tab ---- */
+function renderCityTabs() {
+  $('#cityTabs').innerHTML = DATA.cities.map((c, i) => {
+    const active = c.id === state.cityId ? ' active' : '';
+    return `<button class="pill${active}" data-city="${c.id}">${esc(c.name)} <span class="en">${esc(c.en)}</span></button>`;
+  }).join('');
+
+  $('#cityTabs').querySelectorAll('.pill').forEach((btn) => {
+    btn.addEventListener('click', () => selectCity(btn.dataset.city));
+  });
+}
+
+/* ---- 日期 Tab（随城市变化） ---- */
+function renderDateTabs() {
+  const city = DATA.cities.find((c) => c.id === state.cityId);
+  const dates = city ? city.dates : [];
+  $('#dateTabs').innerHTML = dates.map((d) => {
+    const active = d === state.date ? ' active' : '';
+    return `<button class="date-pill${active}" data-date="${d}">${d}</button>`;
+  }).join('');
+
+  $('#dateTabs').querySelectorAll('.date-pill').forEach((btn) => {
+    btn.addEventListener('click', () => selectDate(btn.dataset.date));
+  });
+}
+
+/* ---- 当日行程时间轴 ---- */
+function renderItinerary() {
+  const city = DATA.cities.find((c) => c.id === state.cityId);
+  const key = `${state.cityId}|${state.date}`;
+  const plan = DATA.itinerary[key];
+
+  // 顶部信息条
+  $('#itineraryMeta').innerHTML = `
+    <span class="daytag">${esc(plan?.dayLabel || '·')}</span>
+    <span class="city">${esc(city?.name || '—')}</span>
+    <span>· ${esc(state.date || '')}</span>
+    ${plan?.note ? `<span style="color:var(--muted)">${esc(plan.note)}</span>` : ''}
+  `;
+
+  // 时间轴内容
+  if (plan && plan.items && plan.items.length) {
+    $('#itinerary').innerHTML = plan.items.map((it) => `
+      <div class="tl-item">
+        <div class="tl-head">
+          <span class="tl-time">${esc(it.time)}</span>
+          <span class="tl-activity">${esc(it.activity)}</span>
+        </div>
+        ${it.transport && it.transport !== '—' ? `<span class="tl-transport">${esc(it.transport)}</span>` : ''}
+      </div>
+    `).join('');
+  } else {
+    $('#itinerary').innerHTML = `<div class="tl-empty">该日行程待补充（数据占位）📝</div>`;
+  }
+}
+
+/* ---- 景点 / 酒店 / 注意事项 渲染（仅一次） ---- */
+function renderAttractions() {
+  $('#attractions').innerHTML = DATA.attractions.map((s) => `
+    <div class="card">
+      <h3>🕌 ${esc(s.name)} <span class="badge">${esc(s.city)}</span></h3>
+      <div class="kv"><span class="k">门票</span><span class="v">${esc(s.ticket)}</span></div>
+      <div class="kv"><span class="k">开放</span><span class="v">${esc(s.hours)}</span></div>
+      <div class="kv"><span class="k">交通</span><span class="v">${esc(s.transport)}</span></div>
+      <div class="kv"><span class="k">讲解</span><span class="v">${esc(s.intro)}</span></div>
+    </div>
+  `).join('');
+}
+
+function renderHotels() {
+  $('#hotels').innerHTML = DATA.hotels.map((h) => `
+    <div class="card">
+      <h3>🛏️ ${esc(h.name)} <span class="badge">${esc(h.city)}</span></h3>
+      <div class="kv"><span class="k">地址</span><span class="v">${esc(h.address)}</span></div>
+      <div class="kv"><span class="k">电话</span><span class="v"><a href="tel:${esc(h.phone).replace(/\s/g,'')}">${esc(h.phone)}</a></span></div>
+      <div class="kv"><span class="k">预订码</span><span class="v">${esc(h.bookingCode)}</span></div>
+      <div class="kv"><span class="k">美食</span><span class="v"></span></div>
+      <div class="food-chips">${(h.nearbyFood||[]).map((f)=>`<span class="food-chip">🍽️ ${esc(f)}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function renderNotes() {
+  $('#notes').innerHTML = DATA.notes.map((n) => `
+    <div class="note-item">
+      <div class="note-cat">${esc(n.category)}</div>
+      <div class="note-text">${esc(n.text)}</div>
+    </div>
+  `).join('');
+}
+
+/* ---- 交互：选择城市 / 日期 ---- */
+function selectCity(id) {
+  const city = DATA.cities.find((c) => c.id === id);
+  if (!city) return;
+  state.cityId = id;
+  state.date = city.dates[0];   // 默认选中该城市第一天
+  renderCityTabs();
+  renderDateTabs();
+  renderItinerary();
+}
+
+function selectDate(d) {
+  state.date = d;
+  renderDateTabs();
+  renderItinerary();
+}
+
+/* ---- 底部固定 Tab：滚动定位 + 高亮（scrollspy） ---- */
+function initBottomBar() {
+  const tabs = [...document.querySelectorAll('.bottom-tab')];
+  const sections = tabs.map((t) => document.getElementById(t.dataset.target));
+
+  function setActive(targetId) {
+    tabs.forEach((t) => t.classList.toggle('active', t.dataset.target === targetId));
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const sec = document.getElementById(tab.dataset.target);
+      if (sec) {
+        setActive(tab.dataset.target);
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // scrollspy：滚动时自动同步高亮
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach((s) => s && io.observe(s));
+  }
+}
+
+/* ---- 初始化 ---- */
+function init() {
+  renderCityTabs();
+  renderAttractions();
+  renderHotels();
+  renderNotes();
+  initBottomBar();
+  // 默认选中第一座城市
+  if (DATA.cities.length) selectCity(DATA.cities[0].id);
+}
+init();
+</script>
+</body>
+</html>
