@@ -63,5 +63,6 @@ const state={date:DATES[0]};function selectDate(d){state.date=d;renderDates();re
 function renderNotes(){$('#notesOut').innerHTML=NOTES.map(n=>'<div class="note-item"><div class="note-cat">'+esc(n.category)+'</div><div class="note-text">'+esc(n.text)+'</div></div>').join('');}
 function renderHistory(){let o='<h3 class="sub">📜 印度历史时间线</h3><div class="history-tl">';HISTORY.sections.forEach(s=>o+='<div class="h-item"><h4>'+esc(s.t)+'</h4><p>'+esc(s.c)+'</p></div>');o+='</div><h3 class="sub">🪔 宗教信仰</h3><div class="rel-grid">';Object.entries(RELIGION).forEach(([k,v])=>o+='<div class="rel-box"><h4>'+esc(k)+'</h4><p>'+esc(v)+'</p></div>');o+='</div><h3 class="sub">🙏 人文习俗</h3><div class="rel-grid">';CUSTOM.forEach(c=>o+='<div class="rel-box"><h4>'+esc(c.t)+'</h4><p>'+esc(c.c)+'</p></div>');o+='</div>';$('#historyOut').innerHTML=o;}
 function bindBottom(){const tabs=[...document.querySelectorAll('.bottom-tab')];const secs=['section-day','section-history','section-notes'];function show(id){secs.forEach(s=>{document.getElementById(s).style.display=(s===id?'block':'none');});tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));}tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.target)));show('section-day');}
+function init(){renderDates();renderDay(state.date);renderNotes();renderHistory();bindBottom();}
 init();
 </script></body></html>
