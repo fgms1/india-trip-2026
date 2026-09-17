@@ -3,7 +3,7 @@
 <meta name="theme-color" content="#12306b"><title>🛕 印度之旅 · 行动手册</title>
 <style>
 :root{--saffron:#FF9933;--saffron-dark:#E87A00;--indigo:#12306b;--indigo-light:#1e4785;--cream:#FBF6EC;--card:#fff;--text:#2b2b2b;--muted:#7a7465;--line:#E8DFCC;--shadow:0 2px 10px rgba(18,48,107,.08);--radius:14px;--tabbar-h:62px}
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'PingFang SC',-apple-system,'Microsoft YaHei',sans-serif;background:var(--cream);color:var(--text);max-width:640px;margin:0 auto;padding-bottom:calc(var(--tabbar-h)+env(safe-area-inset-bottom)+16px)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'PingFang SC',-apple-system,'Microsoft YaHei',sans-serif;background:var(--cream);color:var(--text);max-width:640px;margin:0 auto;padding-bottom:calc(var(--tabbar-h) + 16px)}
 .header{background:linear-gradient(135deg,var(--indigo),var(--indigo-light));color:#fff;padding:14px 16px}.header-title{font-size:19px;font-weight:700}.header-sub{font-size:11px;opacity:.85;margin-top:3px}.tricolor{height:4px;background:linear-gradient(90deg,#FF9933 33%,#fff 33% 66%,#138808 66%);border-radius:2px;margin-top:10px}
 .sticky{position:sticky;top:0;z-index:50;background:var(--cream);box-shadow:0 2px 8px rgba(18,48,107,.06)}
 #dateRow{display:flex;gap:6px;overflow-x:auto;padding:10px 14px}
@@ -63,6 +63,6 @@ const state={date:DATES[0]};function selectDate(d){state.date=d;renderDates();re
 function renderNotes(){$('#notesOut').innerHTML=NOTES.map(n=>'<div class="note-item"><div class="note-cat">'+esc(n.category)+'</div><div class="note-text">'+esc(n.text)+'</div></div>').join('');}
 function renderHistory(){let o='<h3 class="sub">📜 印度历史时间线</h3><div class="history-tl">';HISTORY.sections.forEach(s=>o+='<div class="h-item"><h4>'+esc(s.t)+'</h4><p>'+esc(s.c)+'</p></div>');o+='</div><h3 class="sub">🪔 宗教信仰</h3><div class="rel-grid">';Object.entries(RELIGION).forEach(([k,v])=>o+='<div class="rel-box"><h4>'+esc(k)+'</h4><p>'+esc(v)+'</p></div>');o+='</div><h3 class="sub">🙏 人文习俗</h3><div class="rel-grid">';CUSTOM.forEach(c=>o+='<div class="rel-box"><h4>'+esc(c.t)+'</h4><p>'+esc(c.c)+'</p></div>');o+='</div>';$('#historyOut').innerHTML=o;}
 function bindBottom(){const tabs=[...document.querySelectorAll('.bottom-tab')];const secs=['section-day','section-history','section-notes'];function show(id){secs.forEach(s=>{document.getElementById(s).style.display=(s===id?'block':'none');});tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));}tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.target)));show('section-day');}
-function init(){renderDates();renderDay(state.date);renderNotes();renderHistory();bindBottom();}
+function init(){var sa=window.safari?0:0;try{sa=Number(getComputedStyle(document.body).paddingBottom)||0;if(navigator.userAgent.includes('iPhone')||navigator.userAgent.includes('iPad')){var pad=100;document.body.style.paddingBottom=pad+'px';}}catch(e){}renderDates();renderDay(state.date);renderNotes();renderHistory();bindBottom();}
 init();
 </script></body></html>
